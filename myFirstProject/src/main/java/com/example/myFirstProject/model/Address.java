@@ -9,7 +9,7 @@ import lombok.Data;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String state;
     private String city;
