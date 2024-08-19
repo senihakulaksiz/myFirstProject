@@ -1,0 +1,16 @@
+package com.example.myFirstProject.service;
+
+import com.example.myFirstProject.dto.LoginModelDTO;
+import com.example.myFirstProject.dto.PersonDetailDTO;
+import com.example.myFirstProject.dto.PersonSummaryDTO;
+import com.example.myFirstProject.model.Person;
+
+import java.util.List;
+
+public interface PersonService {
+    PersonDetailDTO createPerson(PersonDetailDTO personDetailDTO);
+    PersonDetailDTO getPersonById(Long id);
+    List<PersonSummaryDTO> getAllPersons();
+    void deletePerson(Long id);
+    Person login(LoginModelDTO loginModelDTO);
+}

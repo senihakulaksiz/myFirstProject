@@ -1,9 +1,10 @@
 package com.example.myFirstProject.controller;
 
 import com.example.myFirstProject.dto.LoginModelDTO;
+import com.example.myFirstProject.dto.PersonDetailDTO;
+import com.example.myFirstProject.dto.PersonSummaryDTO;
 import com.example.myFirstProject.model.Person;
-import com.example.myFirstProject.repository.PersonRepository;
-import org.mindrot.jbcrypt.BCrypt;
+import com.example.myFirstProject.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,41 +14,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/persons")
 public class PersonController {
-    @Autowired
-    private PersonRepository _personRepository;
 
-    public PersonController(PersonRepository personRepository) {
-        this._personRepository = personRepository;
+    private final PersonService personService;
+
+    @Autowired
+    public PersonController(PersonService personService) {
+        this.personService = personService;
     }
 
     @GetMapping
-    public List<Person> getPersons() {
-        return _personRepository.findAll();
+    public List<PersonSummaryDTO> getPersons() {
+        return personService.getAllPersons();
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginModelDTO model) {
-        Person person = _personRepository.findByName(model.getName());
+        Person person = personService.login(model);
         if (person == null) {
-            return ResponseEntity.badRequest().body("Kullanıcı adı ya da şifre hatalı!");
+            return ResponseEntity.badRequest().body("Name or password is incorrect!");
         }
-        boolean isPasswordMatch = BCrypt.checkpw(model.getPassword(), person.getPassword());
-        if (!isPasswordMatch) {
-            return ResponseEntity.badRequest().body("Kullanıcı adı ya da şifre hatalı!");
-        }
-
-        return ResponseEntity.ok().body("Giriş başarılı");
+        return ResponseEntity.ok().body("Login successful");
     }
 
     @PostMapping
-    public Person insertPerson(@RequestBody Person person) {
-        String hashedPwd = BCrypt.hashpw(person.getPassword(), BCrypt.gensalt());
-        person.setPassword(hashedPwd);
-        return _personRepository.save(person);
+    public PersonDetailDTO insertPerson(@RequestBody PersonDetailDTO personDetailDTO) {
+        return personService.createPerson(personDetailDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePerson(@PathVariable int id) {
-        _personRepository.deleteById((long)id);
+    public void deletePerson(@PathVariable Long id) {
+        personService.deletePerson(id);
     }
 }

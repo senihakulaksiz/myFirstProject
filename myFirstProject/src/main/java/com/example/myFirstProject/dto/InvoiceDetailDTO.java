@@ -10,6 +10,6 @@ public class InvoiceDetailDTO {
     private LocalDateTime invoiceDate;
     private double totalAmount;
     private String issuedBy;
-    private List<OrderItemDTO> items;
+    private List<OrderItemDetailDTO> items;
 }
 
