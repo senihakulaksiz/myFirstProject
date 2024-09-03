@@ -27,6 +27,11 @@ public class PersonController {
         return personService.getAllPersons();
     }
 
+    @GetMapping("/role/{role}")
+    public List<PersonSummaryDTO> getPersonsByRole(@PathVariable String role) {
+        return personService.getPersonsByRole(role);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginModelDTO model) {
         Person person = personService.login(model);

@@ -1,4 +1,4 @@
-package com.example.myFirstProject.ServiceImpl;
+package com.example.myFirstProject.service;
 
 import com.example.myFirstProject.dto.LoginModelDTO;
 import com.example.myFirstProject.dto.PersonDetailDTO;
@@ -6,7 +6,6 @@ import com.example.myFirstProject.dto.PersonSummaryDTO;
 import com.example.myFirstProject.exception.ResourceNotFoundException;
 import com.example.myFirstProject.model.Person;
 import com.example.myFirstProject.repository.PersonRepository;
-import com.example.myFirstProject.service.PersonService;
 import org.modelmapper.ModelMapper;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +28,17 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonDetailDTO createPerson(PersonDetailDTO personDetailDTO) {
+        String role = personDetailDTO.getRole();
+        if (!role.equals("business") && !role.equals("customer")) {
+            throw new IllegalArgumentException("Invalid role: " + role);
+        }
+
         Person person = modelMapper.map(personDetailDTO, Person.class);
         person.setPassword(BCrypt.hashpw(person.getPassword(), BCrypt.gensalt()));
         Person savedPerson = personRepository.save(person);
         return modelMapper.map(savedPerson, PersonDetailDTO.class);
     }
+
 
     @Override
     public PersonDetailDTO getPersonById(Long id) {
@@ -62,4 +67,13 @@ public class PersonServiceImpl implements PersonService {
         }
         return null;
     }
+
+    @Override
+    public List<PersonSummaryDTO> getPersonsByRole(String role) {
+        return personRepository.findByRole(role).stream()
+                .map(person -> modelMapper.map(person, PersonSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 }

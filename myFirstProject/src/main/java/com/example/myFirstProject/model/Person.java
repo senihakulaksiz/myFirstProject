@@ -19,6 +19,17 @@ public class Person {
 
     @OneToMany(mappedBy = "person")
     private List<Address> addresses;
+
+    @Column(nullable = false)
+    private String role;
+
+    @PrePersist
+    @PreUpdate
+    public void validateRole() {
+        if (!role.equals("business") && !role.equals("customer")) {
+            throw new IllegalArgumentException("Invalid role: " + role);
+        }
+    }
 }
 
 

@@ -1,4 +1,4 @@
-package com.example.myFirstProject.ServiceImpl;
+package com.example.myFirstProject.service;
 
 import com.example.myFirstProject.dto.OrderItemDetailDTO;
 import com.example.myFirstProject.dto.OrderItemSummaryDTO;
@@ -8,7 +8,6 @@ import com.example.myFirstProject.model.Product;
 import com.example.myFirstProject.repository.OrderItemRepository;
 import com.example.myFirstProject.repository.OrderRepository;
 import com.example.myFirstProject.repository.ProductRepository;
-import com.example.myFirstProject.service.OrderItemService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,5 +77,33 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public void deleteOrderItem(Long id) {
         orderItemRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OrderItemSummaryDTO> getOrderItemsByQuantityGreaterThan(int quantity) {
+        return orderItemRepository.findByQuantityGreaterThan(quantity).stream()
+                .map(orderItem -> modelMapper.map(orderItem, OrderItemSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderItemSummaryDTO> getOrderItemsByPriceRange(double minPrice, double maxPrice) {
+        return orderItemRepository.findByPriceBetween(minPrice, maxPrice).stream()
+                .map(orderItem -> modelMapper.map(orderItem, OrderItemSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderItemSummaryDTO> getOrderItemsByOrderId(Long orderId) {
+        return orderItemRepository.findByOrderId(orderId).stream()
+                .map(orderItem -> modelMapper.map(orderItem, OrderItemSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderItemSummaryDTO> getOrderItemsByProductId(Long productId) {
+        return orderItemRepository.findByProductId(productId).stream()
+                .map(orderItem -> modelMapper.map(orderItem, OrderItemSummaryDTO.class))
+                .collect(Collectors.toList());
     }
 }

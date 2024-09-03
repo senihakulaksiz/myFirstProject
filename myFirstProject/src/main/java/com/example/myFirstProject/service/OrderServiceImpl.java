@@ -1,14 +1,14 @@
-package com.example.myFirstProject.ServiceImpl;
+package com.example.myFirstProject.service;
 
 import com.example.myFirstProject.dto.OrderDetailDTO;
 import com.example.myFirstProject.dto.OrderSummaryDTO;
 import com.example.myFirstProject.model.Order;
 import com.example.myFirstProject.repository.OrderRepository;
-import com.example.myFirstProject.service.OrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +27,27 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderSummaryDTO> getAllOrders() {
         return orderRepository.findAll().stream()
+                .map(order -> modelMapper.map(order, OrderSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderSummaryDTO> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return orderRepository.findByOrderDateBetween(startDate, endDate).stream()
+                .map(order -> modelMapper.map(order, OrderSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderSummaryDTO> getOrdersByPersonId(Long personId) {
+        return orderRepository.findByPerson_Id(personId).stream()
+                .map(order -> modelMapper.map(order, OrderSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderSummaryDTO> getOrdersByDateRangeAndPersonId(LocalDateTime startDate, LocalDateTime endDate, Long personId) {
+        return orderRepository.findByOrderDateBetweenAndPerson_Id(startDate, endDate, personId).stream()
                 .map(order -> modelMapper.map(order, OrderSummaryDTO.class))
                 .collect(Collectors.toList());
     }

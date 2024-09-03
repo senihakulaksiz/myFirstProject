@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -15,17 +16,30 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public OrderController(OrderService orderService, ModelMapper modelMapper) {
         this.orderService = orderService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping
     public List<OrderSummaryDTO> getOrders() {
         return orderService.getAllOrders();
+    }
+
+    @GetMapping("/filterByDate")
+    public List<OrderSummaryDTO> getOrdersByDateRange(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
+        return orderService.getOrdersByDateRange(startDate, endDate);
+    }
+
+    @GetMapping("/filterByPerson")
+    public List<OrderSummaryDTO> getOrdersByPersonId(@RequestParam Long personId) {
+        return orderService.getOrdersByPersonId(personId);
+    }
+
+    @GetMapping("/filterByDateAndPerson")
+    public List<OrderSummaryDTO> getOrdersByDateRangeAndPersonId(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam Long personId) {
+        return orderService.getOrdersByDateRangeAndPersonId(startDate, endDate, personId);
     }
 
     @GetMapping("/{id}")

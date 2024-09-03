@@ -1,10 +1,9 @@
-package com.example.myFirstProject.ServiceImpl;
+package com.example.myFirstProject.service;
 
 import com.example.myFirstProject.dto.ProductDetailDTO;
 import com.example.myFirstProject.dto.ProductSummaryDTO;
 import com.example.myFirstProject.model.Product;
 import com.example.myFirstProject.repository.ProductRepository;
-import com.example.myFirstProject.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductSummaryDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductSummaryDTO> getProductsByPriceRange(double minPrice, double maxPrice) {
+        List<Product> products = productRepository.findByPriceBetween(minPrice, maxPrice);
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductSummaryDTO> getProductsInStock() {
+        List<Product> products = productRepository.findByStockQuantityGreaterThan(0);
         return products.stream()
                 .map(product -> modelMapper.map(product, ProductSummaryDTO.class))
                 .collect(Collectors.toList());

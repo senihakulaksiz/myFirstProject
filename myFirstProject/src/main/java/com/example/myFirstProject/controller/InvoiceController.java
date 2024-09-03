@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -23,6 +24,11 @@ public class InvoiceController {
     @GetMapping
     public List<InvoiceSummaryDTO> getAllInvoices() {
         return invoiceService.getAllInvoices();
+    }
+
+    @GetMapping("/date-range")
+    public List<InvoiceSummaryDTO> getInvoicesByDateRange(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
+        return invoiceService.getInvoicesByDateRange(startDate, endDate);
     }
 
     @GetMapping("/{id}")

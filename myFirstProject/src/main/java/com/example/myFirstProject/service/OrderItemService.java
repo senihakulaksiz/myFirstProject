@@ -10,4 +10,9 @@ public interface OrderItemService {
     OrderItemDetailDTO getOrderItemById(Long id);
     OrderItemDetailDTO createOrderItem(OrderItemDetailDTO orderItemDTO);
     void deleteOrderItem(Long id);
+
+    List<OrderItemSummaryDTO> getOrderItemsByQuantityGreaterThan(int quantity);
+    List<OrderItemSummaryDTO> getOrderItemsByPriceRange(double minPrice, double maxPrice);
+    List<OrderItemSummaryDTO> getOrderItemsByOrderId(Long orderId);
+    List<OrderItemSummaryDTO> getOrderItemsByProductId(Long productId);
 }

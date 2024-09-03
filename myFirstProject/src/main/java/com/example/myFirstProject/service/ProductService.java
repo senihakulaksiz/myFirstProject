@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductSummaryDTO> getAllProducts();
+    List<ProductSummaryDTO> getProductsByPriceRange(double minPrice, double maxPrice);
+    List<ProductSummaryDTO> getProductsInStock();
     ProductDetailDTO getProductById(Long id);
     ProductDetailDTO createProduct(ProductDetailDTO productDTO);
     void deleteProduct(Long id);
 }
-

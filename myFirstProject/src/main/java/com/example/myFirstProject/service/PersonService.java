@@ -13,4 +13,5 @@ public interface PersonService {
     List<PersonSummaryDTO> getAllPersons();
     void deletePerson(Long id);
     Person login(LoginModelDTO loginModelDTO);
+    List<PersonSummaryDTO> getPersonsByRole(String role);
 }

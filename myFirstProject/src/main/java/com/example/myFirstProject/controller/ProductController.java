@@ -25,6 +25,16 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/price-range")
+    public List<ProductSummaryDTO> getProductsByPriceRange(@RequestParam double minPrice, @RequestParam double maxPrice) {
+        return productService.getProductsByPriceRange(minPrice, maxPrice);
+    }
+
+    @GetMapping("/in-stock")
+    public List<ProductSummaryDTO> getProductsInStock() {
+        return productService.getProductsInStock();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailDTO> getProductById(@PathVariable Long id) {
         ProductDetailDTO product = productService.getProductById(id);

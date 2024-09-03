@@ -1,15 +1,15 @@
-package com.example.myFirstProject.ServiceImpl;
+package com.example.myFirstProject.service;
 
 import com.example.myFirstProject.dto.InvoiceDetailDTO;
 import com.example.myFirstProject.dto.InvoiceSummaryDTO;
 import com.example.myFirstProject.exception.ResourceNotFoundException;
 import com.example.myFirstProject.model.Invoice;
 import com.example.myFirstProject.repository.InvoiceRepository;
-import com.example.myFirstProject.service.InvoiceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +42,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceSummaryDTO> getAllInvoices() {
         return invoiceRepository.findAll().stream()
+                .map(invoice -> modelMapper.map(invoice, InvoiceSummaryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InvoiceSummaryDTO> getInvoicesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Invoice> invoices = invoiceRepository.findByInvoiceDateBetween(startDate, endDate);
+        return invoices.stream()
                 .map(invoice -> modelMapper.map(invoice, InvoiceSummaryDTO.class))
                 .collect(Collectors.toList());
     }

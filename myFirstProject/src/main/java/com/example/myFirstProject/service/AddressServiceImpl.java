@@ -1,10 +1,9 @@
-package com.example.myFirstProject.ServiceImpl;
+package com.example.myFirstProject.service;
 
 import com.example.myFirstProject.dto.AddressDetailDTO;
 import com.example.myFirstProject.dto.AddressSummaryDTO;
 import com.example.myFirstProject.model.Address;
 import com.example.myFirstProject.repository.AddressRepository;
-import com.example.myFirstProject.service.AddressService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
