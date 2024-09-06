@@ -3,6 +3,7 @@ package com.example.myFirstProject.service;
 import com.example.myFirstProject.dto.LoginModelDTO;
 import com.example.myFirstProject.dto.PersonDetailDTO;
 import com.example.myFirstProject.dto.PersonSummaryDTO;
+import com.example.myFirstProject.dto.RegisterModelDTO;
 import com.example.myFirstProject.exception.ResourceNotFoundException;
 import com.example.myFirstProject.model.Person;
 import com.example.myFirstProject.repository.PersonRepository;
@@ -39,6 +40,27 @@ public class PersonServiceImpl implements PersonService {
         return modelMapper.map(savedPerson, PersonDetailDTO.class);
     }
 
+    @Override
+    public PersonDetailDTO register(RegisterModelDTO registerModelDTO) {
+        // Register işlemleri, örneğin validate ve createPerson çağrısı
+        PersonDetailDTO personDetailDTO = new PersonDetailDTO();
+        personDetailDTO.setName(registerModelDTO.getName());
+        personDetailDTO.setSurname(registerModelDTO.getSurname());
+        personDetailDTO.setPassword(registerModelDTO.getPassword());
+        personDetailDTO.setRole(registerModelDTO.getRole());
+
+        return createPerson(personDetailDTO); // Bu metod, kayıt işlemini gerçekleştirir
+    }
+
+    @Override
+    public Person login(LoginModelDTO loginModelDTO) {
+        Person person = personRepository.findByName(loginModelDTO.getName());
+        if (person != null && BCrypt.checkpw(loginModelDTO.getPassword(), person.getPassword())) {
+            return person;
+        }
+        return null;
+    }
+
 
     @Override
     public PersonDetailDTO getPersonById(Long id) {
@@ -59,14 +81,6 @@ public class PersonServiceImpl implements PersonService {
         personRepository.deleteById(id);
     }
 
-    @Override
-    public Person login(LoginModelDTO loginModelDTO) {
-        Person person = personRepository.findByName(loginModelDTO.getName());
-        if (person != null && BCrypt.checkpw(loginModelDTO.getPassword(), person.getPassword())) {
-            return person;
-        }
-        return null;
-    }
 
     @Override
     public List<PersonSummaryDTO> getPersonsByRole(String role) {

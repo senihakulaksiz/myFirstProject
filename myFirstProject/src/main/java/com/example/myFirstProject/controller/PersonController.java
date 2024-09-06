@@ -3,6 +3,7 @@ package com.example.myFirstProject.controller;
 import com.example.myFirstProject.dto.LoginModelDTO;
 import com.example.myFirstProject.dto.PersonDetailDTO;
 import com.example.myFirstProject.dto.PersonSummaryDTO;
+import com.example.myFirstProject.dto.RegisterModelDTO;
 import com.example.myFirstProject.model.Person;
 import com.example.myFirstProject.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/persons")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PersonController {
 
     private final PersonService personService;
@@ -39,6 +41,11 @@ public class PersonController {
             return ResponseEntity.badRequest().body("Name or password is incorrect!");
         }
         return ResponseEntity.ok().body("Login successful");
+    }
+
+    @PostMapping("/register")
+    public PersonDetailDTO register(@RequestBody RegisterModelDTO registerModelDTO) {
+        return personService.register(registerModelDTO);
     }
 
     @PostMapping
